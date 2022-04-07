@@ -11,8 +11,6 @@ def find_edges(image, height, width, row_length):
      
     pixels_in_one_line = []
 
-    # is_edge = (0).to_bytes(1, 'big')
-    # not_edge = (255).to_bytes(1, 'big')
     is_edge = BLACK_BYTE    # 0
     not_edge = WHITE_BYTE    # 255
 

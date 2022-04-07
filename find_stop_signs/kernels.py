@@ -28,7 +28,7 @@ sobel_edge_detectors = {
 }
 
 
-""" Unused """
+""" Currently unused """
 
 box_blur_filter = [
     [1/9, 1/9, 1/9], 
@@ -60,7 +60,6 @@ contour_points = [
         [None, 0,    None], 
     ],
 
-
     # above
     [ 
         [None, 0,    None], 
@@ -89,86 +88,6 @@ contour_points = [
 # means that this pixel is of type a(number) and is a final point, edge element. 
 
 
-# copied in order from image in S&R paper 
-# https://www.semanticscholar.org/paper/Some-Parallel-Thinning-Algorithms-for-Digital-Stefanelli-Rosenfeld/120c8a3b7cdf3b4767e3011a012bd000cb560467/figure/1
-
-"""
-
-ai = [
-    # 'a1': 
-    
-    [ 
-        ['b', 'b', 'b'], 
-        [0, 1, 0], 
-        ['r', 'r', 'r'], 
-    ],
-
-    # 'a2': 
-
-    [ 
-        [ 0 , 'b', 'b'], 
-        ['r',  1 , 'b'], 
-        ['r', 'r',  0 ], 
-    ],
-    
-
-
-    # 'a3':   <-- from lecture
-    
-    [ 
-        ['r', 0, 'b'], 
-        ['r', 1, 'b'], 
-        ['r', 0, 'b'], 
-    ],
-
-    # 'a4': 
-    
-    [ 
-        ['b', 'b',  0 ], 
-        ['b',  1 , 'r'], 
-        [ 0 , 'r', 'r'], 
-    ],
-]
-
-bi = [
-
-    # 'b1': 
-    
-    [ 
-        ['b',  'b',  'b' ], 
-        [None,  1 ,  0   ], 
-        [ 0 ,   1,   None], 
-    ],
-
-    # 'b2': 
-    
-    [ 
-        ['b',  None, 0   ], 
-        ['b',  1,    1   ], 
-        ['b',  0,    None], 
-    ],
-
-    # 'b3': 
-    
-    [ 
-        [None, 1 ,  0   ], 
-        [ 0 ,  1,   None], 
-        ['b', 'b',  'b' ], 
-    ],
-
-    # 'b4': 
-    
-    [ 
-        [None, 0,    'b'], 
-        [1,    1,    'b'], 
-        [0,    None, 'b'], 
-    ],
-
-]
-
-
-
-"""
 ai = [
 
     # 'a1': 
@@ -187,7 +106,7 @@ ai = [
         ['r', 0, 'b'], 
     ],
 
-    # 'a3':   <-- from lecture
+    # 'a3':  
     
     [ 
         [ 0 , 'b', 'b'], 
@@ -201,25 +120,7 @@ ai = [
         ['b', 'b',  0 ], 
         ['b',  1 , 'r'], 
         [ 0 , 'r', 'r'], 
-    ],
-
-
-    # # 'a3':    <-- or are  these the other way around?
-    # [ 
-    #     ['b', 'b',  0 ], 
-    #     ['b',  1 , 'r'], 
-    #     [ 0 , 'r', 'r'], 
-    # ],
-
-
-    # # 'a4': 
-    
-    # [ 
-    #     [ 0 , 'b', 'b'], 
-    #     ['r',  1 , 'b'], 
-    #     ['r', 'r',  0 ], 
-    # ],
-    
+    ],  
 ]
 
 bi = [

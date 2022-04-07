@@ -23,10 +23,10 @@ def read_bmp_file(filename):
 
         
 def dimensions(bmp_header):
-    # print(bmp_header)
+    
     height_bytes = bytearray(bmp_header[22:26])
     height_bytes.reverse()   # little endian
-    # print(height_bytes)
+    
     height_dec = int(str(height_bytes.hex()), base=16)
    
     width_bytes = bytearray(bmp_header[18:22])

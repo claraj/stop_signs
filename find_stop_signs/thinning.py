@@ -13,24 +13,16 @@ def thin(edges_image, height, width, row_length):
 
     i = 0
     
-    # print_img('initial image', edges_image, i)
-
     final_points = find_final_points(0, edges_image, height, width, row_length)
     # print_img('final points start', final_points, i)
 
     while not identical_image(edges_image, final_points):
         contour_points = generate_contour_points(i, edges_image, height, width, row_length)
-        # print_img('contour points', contour_points, i)
         edges_image = remove_contour_keep_final(edges_image, contour_points, final_points, width)
-        # print_img('edges points after remove contour keep final', edges_image, i)
         i = ( i + 1 ) % 4
         final_points = update_final_points_for_index_with_final_points_from_edge_image(i, edges_image, final_points, height, width, row_length)
-        # print_img('final points', final_points, i )
-
-        # input('enter to continue')
         
-    # return final_points  # or edge image, whatever, they'll be the same
-    final_points.reverse()
+    final_points.reverse()  # flip the other way up
     return final_points  # or edge image, whatever, they'll be the same
 
 
@@ -49,7 +41,6 @@ def find_final_points(index, edges_image, height, width, row_length):
         if pixel_block is None: 
             line_of_pixels.append(WHITE_BYTE)
 
-        # elif is_final_a_or_b(a, b, None, pixel_block):  # test all at once
         elif is_final_a_or_b(a, b, other_b, pixel_block):  # test all at once
             # then it's a final point 
             line_of_pixels.append(BLACK_BYTE)
@@ -95,7 +86,6 @@ def is_final_a(pixel_block, a_grid):
     pixel_in_blue = False
     zero_one_matches = 0  # needs to be 3
     
-    # print(pixel_block, a_grid)
     for pixel_row, a_row in zip(pixel_block, a_grid):
         for pixel, a_pixel in zip(pixel_row, a_row):
             if a_pixel == 'r' and pixel == BLACK_BYTE:
@@ -154,8 +144,6 @@ def generate_contour_points(index, edges_image, height, width, row_length):
     contour_point = kernels.contour_points[index]
     line_of_pixels = []
     for pixel_block, counter in block_of_pixels_iterator(edges_image, height, width, row_length, mode="UPRIGHT"):
-
-        # print_img('block', pixel_block, counter)
 
         # IGNORE PADDING
         if counter % row_length >= width:
@@ -216,16 +204,10 @@ def update_final_points_for_index_with_final_points_from_edge_image(index, edges
 
     new_final_points = find_final_points(index, edges_image, height, width, row_length) 
 
-    # print_img("existing final points", final_points, index)
-    # print_img("new final points", new_final_points, index)
-
-
     for y, new_final_point_row in enumerate(new_final_points):
         for x, new_final_point in enumerate(new_final_point_row):
             if new_final_point == BLACK_BYTE:
                 final_points[y][x] = BLACK_BYTE
-
-    # print_img("updated final points", final_points, index)
 
     return final_points
 

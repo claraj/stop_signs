@@ -14,12 +14,11 @@ def find_stop_sign(initial_lines, pixels_for_lines, max_d):
 
     lines = initial_lines[:]  # make a copy 
 
-    # TODO maybe throw out any with very similar d and theta? Remember these are quantized
+    # TODO maybe throw out any with very similar d and theta? 
+    # Remember these are quantized
     lines.sort( key = lambda l: l.theta)
-    # for line in lines:
-    #     print(line)
+
     while len(lines) >= MIN_LINES_FOR_STOP_SIGN: 
-        # print(lines)
         line = lines[0]
         # does this work with all the other lines to make a stop sign?
         angle = line.theta
@@ -59,7 +58,6 @@ def lines_with_angles(lines, angles, acceptable_delta):
                     matching_lines.append(line)
                     break  # only add one matching line per angle 
         
-    # print(len(matching_lines), matching_lines)
     return matching_lines
 
 
@@ -68,14 +66,6 @@ def matching_d(matching_lines, line):
         if abs(l.d - line.d) < INTERCEPT_SEPARATION:
             return True 
     return False
-
-
-def stop_sign_location_for_lines(lines):
-    # we know intercepts and angles so should be able to report where on the image the stop sign is 
-    # return dimensions of box bounded by lines
-    pass
-    # TODO 
-    # something else, draw a box on the original image
 
 
 def get_pixels_for_selected_lines(lines, pixels_for_lines, max_d):
@@ -93,10 +83,7 @@ def get_pixels_for_selected_lines(lines, pixels_for_lines, max_d):
         theta_index = int(line.theta / THETA_STEP)
         pixels += pixels_for_lines[d_index][theta_index]
 
-    # min x value
-    # max x value
-    # min y value 
-    # max y value 
+
     min_x = min( [p.x for p in pixels ] )
     min_y = min( [p.y for p in pixels ] )
     max_x = max( [p.x for p in pixels ] )
@@ -106,18 +93,17 @@ def get_pixels_for_selected_lines(lines, pixels_for_lines, max_d):
     range_y = max_y - min_y
 
     # this only works if we know the offsets from the origin
-    # image = [ [ 0 for y in range(height) ] for x in range(width) ]
     image = [ [ WHITE_BYTE for x in range(range_x + 1) ] for y in range(range_y + 1) ]
 
     for pixel in pixels:   # list of Pixel named tuples
         x = pixel.x - min_x 
         y = range_y - ( pixel.y - min_y )  # the y axis is "upside down"
-        # image[pixel.y - min_y][pixel.x - min_x] = BLACK_BYTE
         image[y][x] = BLACK_BYTE
 
-    print_img(image, file='out/pixels.txt')
+    print_img(image, file='out/pixels.txt')  # draw "pixels" to a text file, for debugging
 
     return pixels 
+
 
 
 def get_bounding_box(pixels):

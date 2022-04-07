@@ -7,20 +7,13 @@ import matplotlib.pyplot as pyplot
 from datetime import datetime
 
 
-# theta_step = 1  # -> 72 elements, which is divisible by 4 so could write the histogram out as a bitmap 
-# d_step = 1  
-# theta_step = THETA_STEP # -> 72 elements, which is divisible by 4 so could write the histogram out as a bitmap 
-# d_step = D_STEP
-
- 
 Line = namedtuple('line', 'd theta value')
 Pixel = namedtuple('pixel', 'x y')
 
 deg_to_rad = { d: math.radians(d) for d in range(0, 180+1, THETA_STEP) }  # save calculating it every time
     
 """
-TODO where are the pixels that contributed to each line? 
-Can also include information from edge detection, how much does an edge pass the threshold? 
+TODO Can also include information from edge detection, how much does an edge pass the threshold? 
 """
 
 def max_d_for_image(height, width):
@@ -51,23 +44,20 @@ def find_lines(image, height, width, row_length):  # Hough transform
                 # ignore or write 0 or something 
                 continue
             else: 
-                # pixel = image[x][y]
                 pixel = image[y][x]
                 if pixel == BLACK_BYTE or pixel == 0:  # is edge 
                     edge_count += 1   # may be used to determine interestingness threshold
 
-                    for theta_chunk in range(0, 180+1, THETA_STEP):   # theta_chunk = 0, 5, 10, 15 ...
+                    for theta_chunk in range(0, 180+1, THETA_STEP):   
                         theta_rad = deg_to_rad[theta_chunk]
                         theta_quantized =  int(theta_chunk / THETA_STEP)
                         d = (y * math.sin(theta_rad)) + (x * math.cos(theta_rad))
                         d_quantized = quantize_intersect(max_d, d)
-                     
                         a[d_quantized][theta_quantized] += 1
-
                         locations_of_pixels_for_cell[d_quantized][theta_quantized].append( Pixel(x, y) )
 
 
-    print('there are', edge_count, 'edge elements.')
+    # print('there are', edge_count, 'edge elements.')
 
     # identify popular lines
     lines = where_in_image_are_lines(a, edge_count, max_d)
@@ -77,16 +67,10 @@ def find_lines(image, height, width, row_length):  # Hough transform
     else:
         print('no lines')
 
-
-    return lines, locations_of_pixels_for_cell # max_d, d_step, theta_step
+    return lines, locations_of_pixels_for_cell 
 
 
 def where_in_image_are_lines(a, edge_count, max_d):
-    # print(a)
-
-    # for row in a:
-    #     print( " ".join([str(n) for n in row]) )
-
 
     # interesting line threshold - value may be 7 for small image with one line, or 100s or 1000s for big image. 
     # what are the distribution of values in the histogram a? 
@@ -103,31 +87,17 @@ def where_in_image_are_lines(a, edge_count, max_d):
                 theta = quantized_theta * THETA_STEP
                 line = Line(d, theta, value)
                 interesting_lines.append(line)
-                # print(line)
-
+               
     return interesting_lines
 
 
-# def quantize_intersect(max_d, step, calculated_d):
-#     # print(computed_intersect)
-#     # total range is -max_d to +max_d 
-#     # d is the actual intersect, and may be negative. 
-#     # quantized intersect is the value of d mapped to array indexes, so is a positive integer between 0 and max_d 
-
-#     return int((calculated_d + max_d) / step)
 def quantize_intersect(max_d, calculated_d):
-    # print(computed_intersect)
     # total range is -max_d to +max_d 
     # d is the actual intersect, and may be negative. 
     # quantized intersect is the value of d mapped to array indexes, so is a positive integer between 0 and max_d 
-
     return int((calculated_d + max_d) / D_STEP)
 
 
-# def get_d_from_quantized(max_d, step, quantized_d):
-#     # d is the actual intersect, and may be negative. 
-#     # quantized intersect is the value of d mapped to array indexes, so is a positive integer between 0 and max_d 
-#     return (quantized_d * step) - max_d
 def get_d_from_quantized(max_d, quantized_d):
     # d is the actual intersect, and may be negative. 
     # quantized intersect is the value of d mapped to array indexes, so is a positive integer between 0 and max_d 
@@ -143,7 +113,6 @@ def plot_lines(lines, height, width, max_d):
 
     axes.set_ylim([0, height])
 
-
     for line in lines:
         d = line.d 
         theta = line.theta
@@ -156,15 +125,13 @@ def plot_lines(lines, height, width, max_d):
         else:
             axes.plot(x, normal_to_cartesian(x, d, theta))
 
-
     ts = int(datetime.now().timestamp())
     figure.savefig(f'out/plot_{ts}.png')
-    # pyplot.show()
     pyplot.close()
 
 
-def normal_to_cartesian(x, d, theta):  
 
+def normal_to_cartesian(x, d, theta):  
     # function called by matplot lib to chart the line
     theta_rad = math.radians(theta)
     return (d - (x * math.cos(theta_rad) )) / math.sin(theta_rad) 
